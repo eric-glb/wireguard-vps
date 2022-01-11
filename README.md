@@ -12,7 +12,7 @@ Initially I used [`STARDUST1-S`](https://www.scaleway.com/stardust-instances/) V
 
 Prerequisites:
 - a [Scaleway account](https://console.scaleway.com/register)
-- a Scaleway `project ID` (create a `.project_id file with this information, or modify the script accordingly)
+- a Scaleway `project ID` (create a `.project_id` file with this information, or modify the script accordingly)
 - [scaleway-cli](https://github.com/scaleway/scaleway-cli), using your account (`scw init` done) 
 
 ```bash
