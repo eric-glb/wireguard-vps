@@ -172,7 +172,7 @@ do
   sleep 2
 done
 
-# Print credentials on the console
+# Print credentials on the console (and store information in /root/banner file)
 (
   SEPARATOR=$(perl -le 'print "=" x 80')
   echo -e "${SEPARATOR}\nWireguard conf file for ${MY_USER}:\n"
@@ -183,7 +183,7 @@ done
   echo -e "Connect to this server:\n    ssh root@$(curl -sL https://ifconfig.co/)\n${SEPARATOR}"
 ) | tee /root/banner >/dev/console
 
-# Systemd service to print credential on the console at boot time
+# Systemd service to print credentials on the console at boot time
 cat <<'EOF' > /lib/systemd/system/banner-console.service
 [Unit]
 Description=Show information on the console
