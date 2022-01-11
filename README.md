@@ -4,14 +4,14 @@
 
 
 
-Script to instanciate a Scaleway VM as wireguard VPN with Unbound and PiHole, using cloud-init facilities.  
-Initially I used `STARDUST1-S` VM type, as they are really cheap, hence this github project name.
-
+Script to instanciate a [Scaleway](https://www.scaleway.com/) VM as [Wireguard VPN](https://www.wireguard.com/) with [Unbound](https://nlnetlabs.nl/projects/unbound/about/) and [Pi-hole](https://github.com/pi-hole), using [cloud-init](https://cloudinit.readthedocs.io/en/latest/) facilities.  
+Initially I used [`STARDUST1-S`](https://www.scaleway.com/stardust-instances/) VM type, as they are really cheap, hence this github project name.  
+[Scaleway](https://www.scaleway.com/) is a french cloud provider with affordable costs. 
 
 ## How to create a wireguard VM
 
 Prerequisites:
-- a Scaleway account
+- a [Scaleway account](https://console.scaleway.com/register)
 - a Scaleway `project ID` (create a `.project_id file with this information, or modify the script accordingly)
 - [scaleway-cli](https://github.com/scaleway/scaleway-cli), using your account (`scw init` done) 
 
