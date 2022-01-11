@@ -9,7 +9,7 @@ type=${type-STARDUST1-S}
 script="./cloud-init/wireguard_pi-hole_unbound.sh"
 
 # VM type list
-TYPE_LIST=$(scw instance server-type list --output=json)
+TYPE_LIST=$(scw instance server-type list --output=json zone=$zone)
 
 # Check availability
 AVAIL=$(jq -r --arg TYPE "$type" '.[] | select(.name == $TYPE) | .availability' <<<$TYPE_LIST)
