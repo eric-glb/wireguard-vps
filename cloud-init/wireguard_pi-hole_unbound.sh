@@ -6,7 +6,7 @@
 MY_USER=user
 
 DEBIAN_FRONTEND=noninteractive apt-get update 
-DEBIAN_FRONTEND=apt-get upgrade -y
+DEBIAN_FRONTEND=noninteractive apt-get upgrade -y
 DEBIAN_FRONTEND=noninteractive apt-get install -y docker-compose pwgen qrencode fail2ban dnsutils
 
 # Root random password, needed for console access
