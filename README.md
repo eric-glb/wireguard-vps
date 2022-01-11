@@ -1,2 +1,2 @@
 # stardust-wireguard
-Cloud-Init script to instanciate a Scaleway Stardust VM as wireguard VPN
+Cloud-Init scripts to instanciate a cheap Scaleway Stardust VM as wireguard VPN.
