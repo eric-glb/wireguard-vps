@@ -2,17 +2,16 @@
 
 ![screenshot](./assets/scw-wireguard.png)
 
-
-
-Script to instanciate a Scaleway VM as wireguard VPN with Unbound and PiHole, using cloud-init facilities.  
-Initially I used `STARDUST1-S` VM type, as they are really cheap, hence this github project name.
+Script to instanciate a [Scaleway](https://www.scaleway.com/) VM as [Wireguard VPN](https://www.wireguard.com/) with [Unbound](https://nlnetlabs.nl/projects/unbound/about/) and [Pi-hole](https://github.com/pi-hole), using [cloud-init](https://cloudinit.readthedocs.io/en/latest/) facilities.  
+Initially I used [`STARDUST1-S`](https://www.scaleway.com/stardust-instances/) VM type, as they are really cheap, hence this github project name.  
+[Scaleway](https://www.scaleway.com/) is a french cloud provider with affordable costs. 
 
 
 ## How to create a wireguard VM
 
-Prerequisites:
-- a Scaleway account
-- a Scaleway `project ID` (create a `.project_id file with this information, or modify the script accordingly)
+__Prerequisites__:
+- a [Scaleway account](https://console.scaleway.com/register)
+- a Scaleway `project ID` (create a `.project_id` file with this information, or modify the script accordingly)
 - [scaleway-cli](https://github.com/scaleway/scaleway-cli), using your account (`scw init` done) 
 
 ```bash
@@ -23,21 +22,21 @@ Note the parameters `vm_name`, `zone` and `type` in the command-line.
 Default values will be `scw-wireguard`, `nl-ams-1` and `STARDUST1-S` otherwise.
 
 
-NB: [ctrl]+[q] to close the VM console attached to your terminal. 
+__NB__: [ctrl]+[q] to close the VM console attached to your terminal. 
 
 
 ## What it does
 
-This script will: 
+This [script](./create-scw-wireguard_pi-hole_unbound.sh) will: 
 - check the availability for this VM type
 - create a VM 
 - attach the console to the running terminal
-- run the cloud-init script [./cloud-init/wireguard_pi-hole_unbound.sh](./cloud-init/wireguard_pi-hole_unbound.sh).
+- run the [cloud-init script](./cloud-init/wireguard_pi-hole_unbound.sh).
 
 
 ## The cloud-init part
 
-The cloud-init script will:
+The [cloud-init script](./cloud-init/wireguard_pi-hole_unbound.sh) will:
 - upgrade the OS
 - install docker and other things (fail2ban, ...)
 - generate a random password for root
@@ -45,7 +44,6 @@ The cloud-init script will:
 - create an application stack composed of Unbound, Wireguard and Pi-Hole using docker-compose
 - set a service to print the needed information on the server console
 - reboot the OS.
-
 
 
 ## The docker-compose stack
@@ -58,7 +56,6 @@ The docker-compose stack relies on:
 - [pihole/pihole](https://github.com/pi-hole/pi-hole)
 
 Thanks to them for building these docker images, and of course to people involved in these projects.  
-
 
 
 ## How to connect to the VM
