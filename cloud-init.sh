@@ -180,7 +180,7 @@ done
   echo -e "${SEPARATOR}" 
   cat ${CONF}
   echo -e "${SEPARATOR}\nRoot password for console access: ${ROOT_PWD}\n${SEPARATOR}"
-  echo -e "Connect to this server:\n    ssh root@$(curl -sL ip.exacer.be)\n${SEPARATOR}"
+  echo -e "Connect to this server:\n    ssh root@$(curl -sL https://ifconfig.co/)\n${SEPARATOR}"
 ) | tee /root/banner >/dev/console
 
 # Systemd service to print credential on the console at boot time
