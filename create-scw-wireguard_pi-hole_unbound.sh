@@ -27,7 +27,7 @@ size=$(jq -r --arg TYPE "$type" '.[] | select(.name == $TYPE) | .local_volume_si
 cat <<EOF
 
 ==========================================================================================
-Creating Scaleway VM named '$name', type '$type', in zone '$zone'.
+Creating Scaleway VM named '$vm_name', type '$type', in zone '$zone'.
 
 The console will be attached to this terminal.
 [ctrl]+[q] to close it.
