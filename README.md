@@ -43,19 +43,22 @@ The cloud-init script will:
 - generate a random password for root
 - create a config file for Unbound
 - create an application stack composed of Unbound, Wireguard and Pi-Hole using docker-compose
-- reboot the OS
-- print the needed information on the server console.
+- set a service to print the needed information on the server console
+- reboot the OS.
 
 
 
 ## The docker-compose stack
+
+Very largely inspired/copied from [IAmStoxe/wirehole](https://github.com/IAmStoxe/wirehole), but modified and a bit simplified according to my needs. 
 
 The docker-compose stack relies on:
 - [mvance/unbound](https://github.com/MatthewVance/unbound-docker)
 - [linuxserver/docker-wireguard](https://github.com/linuxserver/docker-wireguard)
 - [pihole/pihole](https://github.com/pi-hole/pi-hole)
 
-Thanks to them for building these docker images, and of course to people involved in these projects.
+Thanks to them for building these docker images, and of course to people involved in these projects.  
+
 
 
 ## How to connect to the VM
