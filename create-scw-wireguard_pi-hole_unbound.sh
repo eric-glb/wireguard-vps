@@ -1,12 +1,8 @@
 #!/usr/bin/env bash
 
-# we need a project ID stored in ./.project_id
-[ -e .project_id ] && project_id=$(cat .project_id)
-project_id=${project_id-xxxxxxxxxxxx}
-
 vm_name=${vm_name-wireguard-vps}
 zone=${zone-nl-ams-1}
-# Unavailable type=STARDUST1-S, so default becomes DEV1-S
+# Unavailable STARDUST1-S VM type, so default becomes DEV1-S
 type=${type-DEV1-S}
 
 # cloud-init script
@@ -48,7 +44,6 @@ OUTPUT=$(
       root-volume=l:${size} \
       name=${vm_name} \
       ip=new \
-      project-id=${project_id} \
       cloud-init=@${script} \
       --output=json
 )
