@@ -1,12 +1,15 @@
 #!/usr/bin/env bash
 
+# we need a project ID stored in ./.project_id
 [ -e .project_id ] && project_id=$(cat .project_id)
 project_id=${project_id-xxxxxxxxxxxx}
 
 vm_name=${vm_name-wireguard-vps}
 zone=${zone-nl-ams-1}
-# Unavailable type=${type-STARDUST1-S}
+# Unavailable type=STARDUST1-S, so default becomes DEV1-S
 type=${type-DEV1-S}
+
+# cloud-init script
 script="./cloud-init/wireguard_pi-hole_unbound.sh"
 
 # VM type list
@@ -20,7 +23,7 @@ then
   exit 1
 fi
 
-# Get size
+# Get disk size for this VM type
 size=$(jq -r --arg TYPE "$type" '.[] | select(.name == $TYPE) | .local_volume_size' <<<$TYPE_LIST)
 
 
@@ -49,6 +52,7 @@ OUTPUT=$(
       cloud-init=@${script} \
       --output=json
 )
+
 
 # console
 vm_id=$(jq -r '.id' <<<$OUTPUT)
