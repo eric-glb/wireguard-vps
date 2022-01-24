@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Cloud-Init script to install Wireguard+Unbound+PiHole on a fresh virtual server.
+# Cloud-Init script to run Wireguard+Unbound+PiHole on a fresh virtual server.
 # Use case: run this on a fresh cheap Scaleway stardust instance. 
 
 MY_USER=user
