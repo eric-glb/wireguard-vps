@@ -3,6 +3,7 @@
 ![screenshot](./assets/scw-wireguard.png)
 
 Script to instanciate a [Scaleway](https://www.scaleway.com/) VM as [Wireguard VPN](https://www.wireguard.com/) with [Unbound](https://nlnetlabs.nl/projects/unbound/about/) and [Pi-hole](https://github.com/pi-hole), using [cloud-init](https://cloudinit.readthedocs.io/en/latest/) facilities.
+
 [Scaleway](https://www.scaleway.com/) is a french cloud provider with affordable costs.
 
 
@@ -16,7 +17,7 @@ __Prerequisites__:
 vm_name=test zone=fr-par-1 type=STARDUST1-S ./create-scw-wireguard_pi-hole_unbound.sh
 ```
 
-Note the parameters `vm_name`, `zone` and `type` in the command-line.
+Note the parameters `vm_name`, `zone` and `type` in the command-line.  
 Default values will be `wireguard-vps`, `nl-ams-1` and `DEV1-S` otherwise.
 
 
