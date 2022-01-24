@@ -1,9 +1,8 @@
-# stardust-wireguard
+# wireguard-vps
 
 ![screenshot](./assets/scw-wireguard.png)
 
 Script to instanciate a [Scaleway](https://www.scaleway.com/) VM as [Wireguard VPN](https://www.wireguard.com/) with [Unbound](https://nlnetlabs.nl/projects/unbound/about/) and [Pi-hole](https://github.com/pi-hole), using [cloud-init](https://cloudinit.readthedocs.io/en/latest/) facilities.  
-Initially I used [`STARDUST1-S`](https://www.scaleway.com/stardust-instances/) VM type, as they are really cheap, hence this github project name.  
 [Scaleway](https://www.scaleway.com/) is a french cloud provider with affordable costs. 
 
 
