@@ -60,3 +60,14 @@ Thanks to them for building these docker images, and of course to people involve
 ## How to connect to the VM
 
 Open the console on your VM using the [Scaleway console](https://console.scaleway.com/) and restart the VM if you need to retrieve the root password and/or the wireguard information.
+
+
+## How to list available VM types by zone
+
+```bash
+for zone in fr-par-1 fr-par-2 fr-par-3 nl-ams-1 pl-waw-1
+do 
+  echo -e "\n== $zone ==\n"
+  scw instance server-type list --output=human zone=$zone
+done
+```
