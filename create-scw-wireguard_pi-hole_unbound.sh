@@ -3,9 +3,10 @@
 [ -e .project_id ] && project_id=$(cat .project_id)
 project_id=${project_id-xxxxxxxxxxxx}
 
-vm_name=${vm_name-scw-wireguard}
+vm_name=${vm_name-wireguard-vps}
 zone=${zone-nl-ams-1}
-type=${type-STARDUST1-S}
+# Unavailable type=${type-STARDUST1-S}
+type=${type-DEV1-S}
 script="./cloud-init/wireguard_pi-hole_unbound.sh"
 
 # VM type list
