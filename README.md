@@ -6,11 +6,10 @@ Script to instanciate a [Scaleway](https://www.scaleway.com/) VM as [Wireguard V
 [Scaleway](https://www.scaleway.com/) is a french cloud provider with affordable costs.
 
 
-## How to create a wireguard VM
+## How to create a wireguard + Unbound + PI-hole VM
 
 __Prerequisites__:
 - a [Scaleway account](https://console.scaleway.com/register)
-- a Scaleway `project ID` (create a `.project_id` file with this information, or modify the script accordingly)
 - [scaleway-cli](https://github.com/scaleway/scaleway-cli), using your account (`scw init` done)
 
 ```bash
@@ -66,7 +65,7 @@ Open the console on your VM using the [Scaleway console](https://console.scalewa
 
 ```bash
 for zone in fr-par-1 fr-par-2 fr-par-3 nl-ams-1 pl-waw-1
-do 
+do
   echo -e "\n== $zone ==\n"
   scw instance server-type list --output=human zone=$zone
 done
