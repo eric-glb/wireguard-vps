@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 
 # Cloud-Init script to run Wireguard+Unbound+PiHole on a fresh virtual server.
-# Use case: run this on a fresh cheap Scaleway stardust instance. 
+# Use case: run this on a fresh cheap Scaleway stardust instance.
 
 MY_USER=user
 
-DEBIAN_FRONTEND=noninteractive apt-get update 
+DEBIAN_FRONTEND=noninteractive apt-get update
 DEBIAN_FRONTEND=noninteractive apt-get upgrade -y
 DEBIAN_FRONTEND=noninteractive apt-get install -y docker-compose pwgen qrencode fail2ban dnsutils
 
@@ -161,7 +161,7 @@ services:
         ipv4_address: 10.2.0.100
 EOF
 
-cd /docker
+cd /docker || return
 docker-compose up -d
 
 # Wait for wireguard image container to create config file
@@ -177,7 +177,7 @@ done
   SEPARATOR=$(perl -le 'print "=" x 80')
   echo -e "${SEPARATOR}\nWireguard conf file for ${MY_USER}:\n"
   qrencode -t ansiutf8 < ${CONF}
-  echo -e "${SEPARATOR}" 
+  echo -e "${SEPARATOR}"
   cat ${CONF}
   echo -e "${SEPARATOR}\nRoot password for console access: ${ROOT_PWD}\n${SEPARATOR}"
   echo -e "Connect to this server:\n    ssh root@$(curl -sL https://ifconfig.co/)\n${SEPARATOR}"
