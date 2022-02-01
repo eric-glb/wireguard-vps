@@ -6,6 +6,27 @@ Script to instanciate a [Scaleway](https://www.scaleway.com/) VM as [Wireguard V
 
 [Scaleway](https://www.scaleway.com/) is a french cloud provider with affordable costs.
 
+```
+                          .-~~~-.              ┌────────────────────────────────┐
+                  .- ~ ~-(       )_ _          │VPS                             │
+                 / Internet           ~ -.     │  ┌────────────┐   DNS          │
+                |                       ◄──────┼──┤Unbound     ◄────────┐       │
+                 \                    ▲    .'  │  │(DNS solver)│        │       │
+                   ~- ._ ,..,.,.,., ,.│ -~     │  └────────────┘        │       │
+                                   '  │        │                 ┌──────┴─────┐ │
+┌────────────────────┐                │        │                 │Pi-Hole     │ │
+│ PC/Phone           │                │        │                 │(DNS filter)│ │
+│                    │                │        │                 └──────▲─────┘ │
+│    ┌─────────┐     │                │        │    ┌─────────┐         │       │
+│    │Wireguard│     │                └────────┼────┤Wireguard├─────────┘       │
+│    │ Client  │     │                         │    │ Server  │  DNS            │
+│    │         │   ──┴─────────────────────────┴─   │         │                 │
+│    │         ├──►          VPN Tunnel          ───►         │                 │
+│    └─────────┘   ──┬─────────────────────────┬─   └─────────┘                 │
+│                    │                         │                                │
+└────────────────────┘                         └────────────────────────────────┘
+
+```
 
 ## How to create a wireguard + Unbound + PI-hole VM
 
@@ -17,7 +38,7 @@ __Prerequisites__:
 vm_name=test zone=fr-par-1 type=STARDUST1-S ./create-scw-wireguard_pi-hole_unbound.sh
 ```
 
-Note the parameters `vm_name`, `zone` and `type` in the command-line.  
+Note the parameters `vm_name`, `zone` and `type` in the command-line.
 Default values will be `wireguard-vps`, `nl-ams-1` and `DEV1-S` otherwise.
 
 
