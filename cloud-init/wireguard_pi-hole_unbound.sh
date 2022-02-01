@@ -7,7 +7,7 @@ MY_USER=user
 
 DEBIAN_FRONTEND=noninteractive apt-get update
 DEBIAN_FRONTEND=noninteractive apt-get upgrade -y
-DEBIAN_FRONTEND=noninteractive apt-get install -y docker-compose pwgen qrencode fail2ban dnsutils
+DEBIAN_FRONTEND=noninteractive apt-get install -y docker-compose pwgen qrencode fail2ban dnsutils jq
 
 # Root random password, needed for console access
 ROOT_PWD=$(pwgen 24 -1)
