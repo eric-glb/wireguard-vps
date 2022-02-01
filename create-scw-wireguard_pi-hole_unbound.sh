@@ -1,5 +1,26 @@
 #!/usr/bin/env bash
 
+# Object: create a cheap VPS VM as VPN Wireguard server, with Unbound and Pi-Hole.
+#
+#                            .-~~~-.              ┌────────────────────────────────┐
+#                    .- ~ ~-(       )_ _          │VPS                             │
+#                   / Internet           ~ -.     │  ┌────────────┐   DNS          │
+#                  |                       ◄──────┼──┤Unbound     ◄────────┐       │
+#                   \                    ▲    .'  │  │(DNS solver)│        │       │
+#                     ~- ._ ,..,.,.,., ,.│ -~     │  └────────────┘        │       │
+#                                     '  │        │                 ┌──────┴─────┐ │
+#  ┌────────────────────┐                │        │                 │Pi-Hole     │ │
+#  │ PC/Phone           │                │        │                 │(DNS filter)│ │
+#  │                    │                │        │                 └──────▲─────┘ │
+#  │    ┌─────────┐     │                │        │    ┌─────────┐         │       │
+#  │    │Wireguard│     │                └────────┼────┤Wireguard├─────────┘       │
+#  │    │ Client  │     │                         │    │ Server  │  DNS            │
+#  │    │         │   ──┴─────────────────────────┴─   │         │                 │
+#  │    │         ├──►          VPN Tunnel          ───►         │                 │
+#  │    └─────────┘   ──┬─────────────────────────┬─   └─────────┘                 │
+#  │                    │                         │                                │
+#  └────────────────────┘                         └────────────────────────────────┘
+
 vm_name=${vm_name-wireguard-vps}
 zone=${zone-nl-ams-1}
 # Unavailable STARDUST1-S VM type, so default becomes DEV1-S
