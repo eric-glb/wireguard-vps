@@ -40,10 +40,6 @@ then
   exit 1
 fi
 
-# Get disk size for this VM type
-size=$(jq -r --arg TYPE "$type" '.[] | select(.name == $TYPE) | .local_volume_size' <<<$TYPE_LIST)
-
-
 # Create VM
 cat <<EOF
 
@@ -62,7 +58,6 @@ OUTPUT=$(
       type=${type} \
       zone=${zone} \
       image=debian_buster \
-      root-volume=l:${size} \
       name=${vm_name} \
       ip=new \
       cloud-init=@${script} \
