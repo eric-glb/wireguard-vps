@@ -162,8 +162,9 @@ services:
         ipv4_address: 10.2.0.100
 
   watchtower:
-    image: containrrr/watchtower
     container_name: watchtower
+    image: containrrr/watchtower
+    restart: unless-stopped
     hostname: watchtower
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
