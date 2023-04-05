@@ -25,7 +25,7 @@ vm_name=${vm_name-wireguard-vps}
 zone=${zone-nl-ams-1}
 # Unavailable STARDUST1-S VM type, so default becomes DEV1-S
 type=${type-DEV1-S}
-
+image=debian_bullseye
 # cloud-init script
 script="./cloud-init/wireguard_pi-hole_unbound.sh"
 
@@ -57,7 +57,7 @@ OUTPUT=$(
   scw instance server create \
       type=${type} \
       zone=${zone} \
-      image=debian_buster \
+      image=${image} \
       name=${vm_name} \
       ip=new \
       cloud-init=@${script} \

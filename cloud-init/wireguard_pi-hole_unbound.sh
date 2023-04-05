@@ -7,7 +7,7 @@ MY_USER=user
 
 DEBIAN_FRONTEND=noninteractive apt-get update
 DEBIAN_FRONTEND=noninteractive apt-get upgrade -y
-DEBIAN_FRONTEND=noninteractive apt-get install -y docker-compose pwgen qrencode fail2ban dnsutils jq
+DEBIAN_FRONTEND=noninteractive apt-get install -y docker-compose pwgen qrencode fail2ban dnsutils jq wireguard
 
 # Root random password, needed for console access
 ROOT_PWD=$(pwgen 24 -1)
@@ -78,6 +78,7 @@ server:
     remote-control:
         control-enable: no
 EOF
+touch /docker/unbound/unbound.log
 
 # docker-compose file, Cf. https://github.com/IAmStoxe/wirehole
 
@@ -144,7 +145,7 @@ services:
       - 127.0.0.1
       - 10.2.0.200 # Points to unbound
     environment:
-      TZ: "EUrope/Paris"
+      TZ: "Europe/Paris"
       WEBPASSWORD: "" # Blank password
       ServerIP: 10.1.0.100 # Internal IP of pihole
       DNS1: 10.2.0.200     # Unbound IP
