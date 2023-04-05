@@ -159,6 +159,16 @@ services:
     networks:
       private_network:
         ipv4_address: 10.2.0.100
+
+  watchtower:
+    image: containrrr/watchtower
+    container_name: watchtower
+    hostname: watchtower
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      WATCHTOWER_POLL_INTERVAL: 86400
+      WATCHTOWER_CLEANUP: "true"
 EOF
 
 cd /docker || return
