@@ -2,30 +2,31 @@
 
 ![screenshot](./assets/scw-wireguard.png)
 
-Script to instanciate a [Scaleway](https://www.scaleway.com/) VM as [Wireguard VPN](https://www.wireguard.com/) with [Unbound](https://nlnetlabs.nl/projects/unbound/about/) and [Pi-hole](https://github.com/pi-hole), using [cloud-init](https://cloudinit.readthedocs.io/en/latest/) facilities.
+Script to instanciate in ~3min a [Scaleway](https://www.scaleway.com/) VM as [Wireguard VPN](https://www.wireguard.com/) with [Unbound](https://nlnetlabs.nl/projects/unbound/about/) and [Pi-hole](https://github.com/pi-hole), using [cloud-init](https://cloudinit.readthedocs.io/en/latest/) facilities.
 
 [Scaleway](https://www.scaleway.com/) is a french cloud provider with affordable costs.
 
 ```
-                          .-~~~-.              ┌────────────────────────────────┐
-                  .- ~ ~-(       )_ _          │VPS                             │
-                 / Internet           ~ -.     │  ┌────────────┐   DNS          │
-                |                       ◄──────┼──┤Unbound     ◄────────┐       │
-                 \                    ▲    .'  │  │(DNS solver)│        │       │
-                   ~- ._ ,..,.,.,., ,.│ -~     │  └────────────┘        │       │
-                                   '  │        │                 ┌──────┴─────┐ │
-┌────────────────────┐                │        │                 │Pi-Hole     │ │
-│ PC/Phone           │                │        │                 │(DNS filter)│ │
-│                    │                │        │                 └──────▲─────┘ │
-│    ┌─────────┐     │                │        │    ┌─────────┐         │       │
-│    │Wireguard│     │                └────────┼────┤Wireguard├─────────┘       │
-│    │ Client  │     │                         │    │ Server  │  DNS            │
-│    │         │   ──┴─────────────────────────┴─   │         │                 │
-│    │         ├──►          VPN Tunnel          ───►         │                 │
-│    └─────────┘   ──┬─────────────────────────┬─   └─────────┘                 │
-│                    │                         │                                │
-└────────────────────┘                         └────────────────────────────────┘
-
+                   .-~~~-.              ┌──────────────────────────────────────┐
+           .- ~ ~-(       )_ _          │VPS                                   │
+          / Internet           ~ -.     │  ┌────────────┐   DNS                │
+         |                       ◄──────┼──┤Unbound     ◄────────┐             │
+          \                    ▲    .'  │  │(DNS solver)│        │             │
+            ~- ._ ,..,.,.,., ,.│ -~     │  └────────────┘        │             │
+                            '  │        │                 ┌──────┴─────┐       │
+┌────────────────────┐         │        │                 │Pi-Hole     │       │
+│ PC/Phone           │         │        │                 │(DNS filter)│       │
+│                    │         │        │                 └──────▲─────┘       │
+│    ┌─────────┐     │         │        │    ┌─────────┐         │             │
+│    │Wireguard│     │         └────────┼────┤Wireguard├─────────┘             │
+│    │ Client  │     │                  │    │ Server  │  DNS                  │
+│    │         │   ──┴──────────────────┴─   │ (VPN)   │                       │
+│    │         ├──►      VPN Tunnel       ───►         │   ┌────────────────┐  │
+│    └─────────┘   ──┬──────────────────┬─   └─────────┘   │Watchtower      │  │
+│                    │                  │                  │(images updater)│  │
+└────────────────────┘                  │                  └────────────────┘  │
+                                        │                                      │
+                                        └──────────────────────────────────────┘
 ```
 
 ## How to create a wireguard + Unbound + PI-hole VM
@@ -61,7 +62,7 @@ The [cloud-init script](./cloud-init/wireguard_pi-hole_unbound.sh) will:
 - install docker and other things (fail2ban, ...)
 - generate a random password for root
 - create a config file for Unbound
-- create an application stack composed of Unbound, Wireguard and Pi-Hole using docker-compose
+- create an application stack composed of Unbound, Wireguard, Pi-Hole and Watchtower using docker-compose
 - set a service to print the needed information on the server console
 - reboot the OS.
 
@@ -74,6 +75,7 @@ The docker-compose stack relies on:
 - [mvance/unbound](https://github.com/MatthewVance/unbound-docker)
 - [linuxserver/docker-wireguard](https://github.com/linuxserver/docker-wireguard)
 - [pihole/pihole](https://github.com/pi-hole/pi-hole)
+- [containrrr/watchtower](https://github.com/containrrr/watchtower)
 
 Thanks to them for building these docker images, and of course to people involved in these projects.
 
