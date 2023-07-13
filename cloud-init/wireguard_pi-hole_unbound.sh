@@ -3,6 +3,24 @@
 # Cloud-Init script to run Wireguard+Unbound+PiHole on a fresh virtual server.
 # Use case: run this on a fresh cheap Scaleway stardust instance.
 
+cat <<'EOF' > /dev/console
+
+    ██╗    ██╗██╗██████╗ ███████╗ ██████╗ ██╗   ██╗ █████╗ ██████╗ ██████╗
+    ██║    ██║██║██╔══██╗██╔════╝██╔════╝ ██║   ██║██╔══██╗██╔══██╗██╔══██╗
+    ██║ █╗ ██║██║██████╔╝█████╗  ██║  ███╗██║   ██║███████║██████╔╝██║  ██║
+    ██║███╗██║██║██╔══██╗██╔══╝  ██║   ██║██║   ██║██╔══██║██╔══██╗██║  ██║
+    ╚███╔███╔╝██║██║  ██║███████╗╚██████╔╝╚██████╔╝██║  ██║██║  ██║██████╔╝
+     ╚══╝╚══╝ ╚═╝╚═╝  ╚═╝╚══════╝ ╚═════╝  ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝╚═════╝
+
+                           ██╗   ██╗██████╗ ███████╗
+                           ██║   ██║██╔══██╗██╔════╝
+                           ██║   ██║██████╔╝███████╗
+                           ╚██╗ ██╔╝██╔═══╝ ╚════██║
+                            ╚████╔╝ ██║     ███████║
+                             ╚═══╝  ╚═╝     ╚══════╝
+
+EOF
+
 MY_USER=user
 
 DEBIAN_FRONTEND=noninteractive apt-get update
@@ -174,6 +192,43 @@ services:
 EOF
 
 cd /docker || return
+
+cat <<'EOF' > /dev/console
+
+             ██████╗ ██╗   ██╗██╗     ██╗
+             ██╔══██╗██║   ██║██║     ██║
+             ██████╔╝██║   ██║██║     ██║
+             ██╔═══╝ ██║   ██║██║     ██║
+             ██║     ╚██████╔╝███████╗███████╗
+             ╚═╝      ╚═════╝ ╚══════╝╚══════╝
+
+      ██╗███╗   ███╗ █████╗  ██████╗ ███████╗███████╗
+      ██║████╗ ████║██╔══██╗██╔════╝ ██╔════╝██╔════╝
+      ██║██╔████╔██║███████║██║  ███╗█████╗  ███████╗
+      ██║██║╚██╔╝██║██╔══██║██║   ██║██╔══╝  ╚════██║
+      ██║██║ ╚═╝ ██║██║  ██║╚██████╔╝███████╗███████║
+      ╚═╝╚═╝     ╚═╝╚═╝  ╚═╝ ╚═════╝ ╚══════╝╚══════╝
+
+EOF
+docker-compose pull
+
+cat <<'EOF' > /dev/console 
+
+         ███████╗████████╗ █████╗ ██████╗ ████████╗
+         ██╔════╝╚══██╔══╝██╔══██╗██╔══██╗╚══██╔══╝
+         ███████╗   ██║   ███████║██████╔╝   ██║
+         ╚════██║   ██║   ██╔══██║██╔══██╗   ██║
+         ███████║   ██║   ██║  ██║██║  ██║   ██║
+         ╚══════╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝
+
+         ███████╗████████╗ █████╗  ██████╗██╗  ██╗
+         ██╔════╝╚══██╔══╝██╔══██╗██╔════╝██║ ██╔╝
+         ███████╗   ██║   ███████║██║     █████╔╝
+         ╚════██║   ██║   ██╔══██║██║     ██╔═██╗
+         ███████║   ██║   ██║  ██║╚██████╗██║  ██╗
+         ╚══════╝   ╚═╝   ╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝
+
+EOF
 docker-compose up -d
 
 # Wait for wireguard image container to create config file
@@ -184,16 +239,16 @@ do
   sleep 2
 done
 
-# Print credentials on the console (and store information in /root/banner file)
+# Store credentials information in /root/banner file
+SEPARATOR=$(perl -le 'print "─" x 80')
 (
-  SEPARATOR=$(perl -le 'print "=" x 80')
-  echo -e "${SEPARATOR}\nWireguard conf file for ${MY_USER}:\n"
-  qrencode -t ansiutf8 < ${CONF}
-  echo -e "${SEPARATOR}"
+  echo -e "${SEPARATOR}\nWireguard configuration\n${SEPARATOR}\n"
+  qrencode -t ansiutf8 < ${CONF} | sed 's/^/     /'
+  echo -e "\n${SEPARATOR}"
   cat ${CONF}
   echo -e "${SEPARATOR}\nRoot password for console access: ${ROOT_PWD}\n${SEPARATOR}"
   echo -e "Connect to this server:\n  ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@$(curl -sL https://ifconfig.co/)\n${SEPARATOR}"
-) | tee /root/banner >/dev/console
+) > /root/banner 
 
 # Systemd service to print credentials on the console at boot time
 cat <<'EOF' > /lib/systemd/system/banner-console.service
@@ -211,4 +266,22 @@ EOF
 systemctl daemon-reload
 systemctl enable banner-console
 
+#restart VM 
+cat <<'EOF' > /dev/console
+
+    ██████╗ ███████╗██████╗  ██████╗  ██████╗ ████████╗
+    ██╔══██╗██╔════╝██╔══██╗██╔═══██╗██╔═══██╗╚══██╔══╝
+    ██████╔╝█████╗  ██████╔╝██║   ██║██║   ██║   ██║
+    ██╔══██╗██╔══╝  ██╔══██╗██║   ██║██║   ██║   ██║
+    ██║  ██║███████╗██████╔╝╚██████╔╝╚██████╔╝   ██║
+    ╚═╝  ╚═╝╚══════╝╚═════╝  ╚═════╝  ╚═════╝    ╚═╝
+
+  ██████╗ ███████╗███╗   ██╗██████╗ ██╗███╗   ██╗ ██████╗
+  ██╔══██╗██╔════╝████╗  ██║██╔══██╗██║████╗  ██║██╔════╝
+  ██████╔╝█████╗  ██╔██╗ ██║██║  ██║██║██╔██╗ ██║██║  ███╗
+  ██╔═══╝ ██╔══╝  ██║╚██╗██║██║  ██║██║██║╚██╗██║██║   ██║
+  ██║     ███████╗██║ ╚████║██████╔╝██║██║ ╚████║╚██████╔╝
+  ╚═╝     ╚══════╝╚═╝  ╚═══╝╚═════╝ ╚═╝╚═╝  ╚═══╝ ╚═════╝
+
+EOF
 reboot
