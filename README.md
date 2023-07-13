@@ -3,30 +3,30 @@
 ![screenshot](./assets/scw-wireguard.png)
 
 Script to instanciate in ~3min a [Scaleway](https://www.scaleway.com/) VM as [Wireguard VPN](https://www.wireguard.com/) with [Unbound](https://nlnetlabs.nl/projects/unbound/about/) and [Pi-hole](https://github.com/pi-hole), using [cloud-init](https://cloudinit.readthedocs.io/en/latest/) facilities.
+All these applications are dockerized, and the docker images are regularly pulled/updated by [watchtower](https://github.com/containrrr/watchtower).
 
 [Scaleway](https://www.scaleway.com/) is a french cloud provider with affordable costs.
 
 ```
-                   .-~~~-.              ┌──────────────────────────────────────┐
-           .- ~ ~-(       )_ _          │VPS                                   │
-          / Internet           ~ -.     │  ┌────────────┐   DNS                │
-         |                       ◄──────┼──┤Unbound     ◄────────┐             │
-          \                    ▲    .'  │  │(DNS solver)│        │             │
-            ~- ._ ,..,.,.,., ,.│ -~     │  └────────────┘        │             │
-                            '  │        │                 ┌──────┴─────┐       │
-┌────────────────────┐         │        │                 │Pi-Hole     │       │
-│ PC/Phone           │         │        │                 │(DNS filter)│       │
-│                    │         │        │                 └──────▲─────┘       │
-│    ┌─────────┐     │         │        │    ┌─────────┐         │             │
-│    │Wireguard│     │         └────────┼────┤Wireguard├─────────┘             │
-│    │ Client  │     │                  │    │ Server  │  DNS                  │
-│    │         │   ──┴──────────────────┴─   │ (VPN)   │                       │
-│    │         ├──►      VPN Tunnel       ───►         │   ┌────────────────┐  │
-│    └─────────┘   ──┬──────────────────┬─   └─────────┘   │Watchtower      │  │
-│                    │                  │                  │(images updater)│  │
-└────────────────────┘                  │                  └────────────────┘  │
-                                        │                                      │
-                                        └──────────────────────────────────────┘
+                 .-~~~-.              ┌───────────────────────────────────┐
+         .- ~ ~-(       )_ _          │VPS                                │
+        / Internet           ~ -.     │ ┌────────────┐   DNS              │
+       |                       ◄──────┼─┤Unbound     ◄───────┐            │
+        \                    ▲    .'  │ │(DNS solver)│       │            │
+          ~- ._ ,..,.,.,., ,.│ -~     │ └────────────┘       │            │
+                          '  │        │               ┌──────┴─────┐      │
+ ┌─────────────────┐         │        │               │Pi-Hole     │      │
+ │ PC/Phone        │         │        │               │(DNS filter)│      │
+ │                 │         │        │               └──────▲─────┘      │
+ │   ┌─────────┐   │         │        │  ┌─────────┐         │            │
+ │   │Wireguard│   │         └────────┼──┤Wireguard├─────────┘            │
+ │   │ Client  │   │                  │  │ Server  │  DNS                 │
+ │   │         │  ─┴──────────────────┴─ │ (VPN)   │                      │
+ │   │         ├──►     VPN Tunnel     ──►         │   ┌────────────────┐ │
+ │   └─────────┘  ─┬──────────────────┬─ └─────────┘   │Watchtower      │ │
+ │                 │                  │                │(images updater)│ │
+ └─────────────────┘                  │                └────────────────┘ │
+                                      └───────────────────────────────────┘
 ```
 
 ## How to create a wireguard + Unbound + PI-hole VM
@@ -63,8 +63,8 @@ The [cloud-init script](./cloud-init/wireguard_pi-hole_unbound.sh) will:
 - generate a random password for root
 - create a config file for Unbound
 - create an application stack composed of Unbound, Wireguard, Pi-Hole and Watchtower using docker-compose
-- set a service to print the needed information on the server console
-- reboot the OS.
+- set a service to print the login and wireguard client information on the server console
+- reboot the OS (in case the linux kernel has been updated during the OS upgrade). 
 
 
 ## The docker-compose stack
