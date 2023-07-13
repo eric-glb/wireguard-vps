@@ -19,13 +19,17 @@
 #  │    │         ├──►          VPN Tunnel          ───►         │                 │
 #  │    └─────────┘   ──┬─────────────────────────┬─   └─────────┘                 │
 #  │                    │                         │                                │
-#  └────────────────────┘                         └────────────────────────────────┘
+#  └────────────────────┘                         │            ┌────────────────┐  │
+#                                                 │            │Watchtower      │  │
+#                                                 │            │(images updater)│  │
+#                                                 │            └────────────────┘  │
+#                                                 └────────────────────────────────┘
 
 vm_name=${vm_name-wireguard-vps}
 zone=${zone-nl-ams-1}
 # Unavailable STARDUST1-S VM type, so default becomes DEV1-S
 type=${type-DEV1-S}
-image=debian_bullseye
+image=debian_bookworm
 # cloud-init script
 script="./cloud-init/wireguard_pi-hole_unbound.sh"
 
