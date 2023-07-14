@@ -41,11 +41,13 @@ done
 R="\e[0;31m"; Y="\e[0;33m"; G="\e[0;32m"; C="\e[0;m"
 sep(){ perl -le 'print "─" x $ARGV[0]' "$(tput cols)"; }
 
-# Intro
+# Help
 for param in $@; do
   if grep -qE '\-h|\-\-help' <<<"$param"; then
-    echo -e "\nObject: create a cheap VPS VM as VPN Wireguard server, with Unbound and Pi-Hole."
-    echo -e "\n$SUBJECT\n"; exit 0
+    echo -e "\n${R}Object${C}: ${G}create a cheap VPS VM as VPN Wireguard server, with Unbound and Pi-Hole.${C}"
+    echo -e "\n$SUBJECT\n"
+    echo -e "${Y}Usage example${C}:\n\n${G}vm_name=test zone=fr-par-2 type=AMP2-C1 $0${C}\n"
+    exit 0
   fi
 done 
 
@@ -56,27 +58,19 @@ if [ "$AVAIL" != "available" ]; then
   echo -e "\n${R}ERROR${C}: VM type ${Y}${type}${C} is not available in zone ${Y}${zone}${C}.\n" && exit 1
 fi
 
-# Create VM
+# Info: VM console attachment pending
 clear; sep
 echo -e "\nCreating Scaleway VM:\n"
 echo -e "  - name:   ${Y}${vm_name}${C}"
 echo -e "  - type:   ${Y}${type}${C}"
 echo -e "  - zone:   ${Y}${zone}${C}"
 echo -e "  - script: ${Y}${script}${C}\n"
-vm_id=$( scw instance server create --output=json         \
-             type=${type} zone=${zone} image=${image}     \
-             name=${vm_name} cloud-init=@${script} ip=new \
-         | jq -r '.id'
-)
-
-# Info: VM console attachment pending
-echo -e "The console will be attached to this terminal.\n${R}[CTRL]${C}+${R}[Q]${C} to close it ${G}once finished${C}.\n"
 sep;
+echo -e "The console will be attached to this terminal.\n${R}[CTRL]${C}+${R}[Q]${C} to close it ${G}once finished${C}.\n"
 
 # tput magic
 tput sc
-echo -e "\n\n\n\n\n\n$SUBJECT" 
-cat <<'EOF'
+echo -e "\n\n\n\n\n\n$SUBJECT"; cat <<'EOF'
               _ _   _              __                               _
  __ __ ____ _(_) |_(_)_ _  __ _   / _|___ _ _   __ ___ _ _  ___ ___| |___
  \ V  V / _` | |  _| | ' \/ _` | |  _/ _ \ '_| / _/ _ \ ' \(_-</ _ \ / -_)
@@ -85,6 +79,13 @@ cat <<'EOF'
 
 EOF
 tput rc
+
+# Create VM
+vm_id=$( scw instance server create --output=json         \
+             type=${type} zone=${zone} image=${image}     \
+             name=${vm_name} cloud-init=@${script} ip=new \
+         | jq -r '.id'
+)
 
 # Attach console
 scw instance server console ${vm_id} zone=${zone}
@@ -97,5 +98,5 @@ echo -en "${R}";sep;echo -en "${C}"
 echo -e "\nHow to connect to VM ${Y}${vm_name}${C}:\n"
 echo -e "${G}ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@${Y}${IP}\n"
 echo -e "${C}\nHow to delete VM ${Y}${vm_name}${C}:\n"
-echo -e "${G}scw instance server terminate with-ip=true zone=${Y}${zone}${G} ${Y}${vm_id}${C}\n"
+echo -e "${G}scw instance server terminate with-ip=true with-block=true zone=${Y}${zone}${G} ${Y}${vm_id}${C}\n"
 echo -en "${R}";sep;echo -e "${C}"

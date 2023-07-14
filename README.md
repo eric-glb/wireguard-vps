@@ -7,6 +7,10 @@ All these applications are dockerized, and the docker images are regularly pulle
 
 [Scaleway](https://www.scaleway.com/) is a french cloud provider with affordable costs.
 
+Cheaper instances:
+- [STARDUST1-S](https://www.scaleway.com/en/stardust-instances/) (only available at fr-par-1 and nl-ams-1)
+- [AMP2-C1](https://www.scaleway.com/en/amp2-instances/) (only available at fr-par-2; arm64)
+
 ```
                  .-~~~-.              ┌───────────────────────────────────┐
          .- ~ ~-(       )_ _          │VPS                                │
@@ -31,12 +35,18 @@ All these applications are dockerized, and the docker images are regularly pulle
 
 ## How to create a wireguard + Unbound + PI-hole VM
 
-__Prerequisites__:
+### Prerequisites
 - a [Scaleway account](https://console.scaleway.com/register)
 - [scaleway-cli](https://github.com/scaleway/scaleway-cli), using your account (`scw init` done)
 
+
+### Example
+
 ```bash
-vm_name=test zone=fr-par-1 type=STARDUST1-S ./create-scw-wireguard_pi-hole_unbound.sh
+# AMP2-C1 available at fr-par-2 for testing, as cheap as STARDUST1-S, but arm64 instead of x86_64
+
+vm_name=test zone=fr-par-2 type=AMP2-C1 ./create-scw-wireguard_pi-hole_unbound.sh
+
 ```
 
 Note the parameters `vm_name`, `zone` and `type` in the command-line.
@@ -72,7 +82,7 @@ The [cloud-init script](./cloud-init/wireguard_pi-hole_unbound.sh) will:
 Very largely inspired/copied from [IAmStoxe/wirehole](https://github.com/IAmStoxe/wirehole), but modified and a bit simplified according to my needs.
 
 The docker-compose stack relies on:
-- [mvance/unbound](https://github.com/MatthewVance/unbound-docker)
+- [alpinelinux/unbound](https://hub.docker.com/r/alpinelinux/unbound) (was previously [mvance/unbound](https://github.com/MatthewVance/unbound-docker), but the latter was x86_64-only)
 - [linuxserver/docker-wireguard](https://github.com/linuxserver/docker-wireguard)
 - [pihole/pihole](https://github.com/pi-hole/pi-hole)
 - [containrrr/watchtower](https://github.com/containrrr/watchtower)
@@ -82,7 +92,7 @@ Thanks to them for building these docker images, and of course to people involve
 
 ## Scaleway CLI commands examples
 
-### How to list available VM types by zone
+### How to list available VM types and hourly prices by zone
 
 ```bash
 for zone in fr-par-1 fr-par-2 fr-par-3 nl-ams-1 pl-waw-1; do
@@ -124,7 +134,7 @@ ZONE=<get value from instance list>
 ID=<get value from instance list>
 
 # Delete instance
-scw instance server terminate with-ip=true zone=$ZONE $ID
+scw instance server terminate with-ip=true with-block=true zone=$ZONE $ID
 ```
 
 ### How to get all available boot images for VMs

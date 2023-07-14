@@ -40,16 +40,13 @@ cat <<'EOF' > /docker/unbound/unbound.conf
 server:
     cache-max-ttl: 86400
     cache-min-ttl: 60
-    directory: "/opt/unbound/etc/unbound"
     edns-buffer-size: 1472
     interface: 0.0.0.0@53
     rrset-roundrobin: yes
-    username: "_unbound"
     log-local-actions: no
     log-queries: no
     log-replies: no
     log-servfail: no
-    logfile: /dev/null
     verbosity: 1
     aggressive-nsec: yes
     delay-close: 10000
@@ -61,8 +58,6 @@ server:
     access-control: 192.168.0.0/16 allow
     access-control: 172.16.0.0/12 allow
     access-control: 10.0.0.0/8 allow
-    auto-trust-anchor-file: "var/root.key"
-    chroot: "/opt/unbound/etc/unbound"
     harden-algo-downgrade: yes
     harden-below-nxdomain: yes
     harden-dnssec-stripped: yes
@@ -80,7 +75,6 @@ server:
     private-address: fd00::/8
     private-address: fe80::/10
     private-address: ::ffff:0:0/96
-    tls-cert-bundle: /etc/ssl/certs/ca-certificates.crt
     unwanted-reply-threshold: 10000000
     val-clean-additional: yes
     msg-cache-size: 260991658
@@ -113,12 +107,12 @@ networks:
 
 services:
   unbound:
-    image: "mvance/unbound:latest"
+    image: "alpinelinux/unbound:latest"
     container_name: unbound
     restart: unless-stopped
     hostname: "unbound"
     volumes:
-      - "./unbound:/opt/unbound/etc/unbound/"
+      - "./unbound:/etc/unbound"
     networks:
       private_network:
         ipv4_address: 10.2.0.200
