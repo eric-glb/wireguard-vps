@@ -80,17 +80,55 @@ The docker-compose stack relies on:
 Thanks to them for building these docker images, and of course to people involved in these projects.
 
 
-## How to connect to the VM
+## Scaleway CLI commands examples
 
-Open the console on your VM using the [Scaleway console](https://console.scaleway.com/) and restart the VM if you need to retrieve the root password and/or the wireguard information.
-
-
-## How to list available VM types by zone
+### How to list available VM types by zone
 
 ```bash
-for zone in fr-par-1 fr-par-2 fr-par-3 nl-ams-1 pl-waw-1
-do
+for zone in fr-par-1 fr-par-2 fr-par-3 nl-ams-1 pl-waw-1; do
   echo -e "\n== $zone ==\n"
   scw instance server-type list --output=human zone=$zone
 done
+```
+
+
+### How to connect to the VM
+
+Open the console on your VM using the [Scaleway console](https://console.scaleway.com/) and restart the VM if you need to retrieve the root password and/or the wireguard information.
+
+Alternative:
+```bash
+# List instances
+scw instance server list zone=all
+
+# Populate these variables
+ZONE=<get value from instance list>
+ID=<get value from instance list>
+
+# Reboot instance
+scw instance server reboot zone=$ZONE $ID
+
+# Attach to the instance console ([CTRL]+[Q] to detach from console)
+scw instance server console zone=$ZONE $ID
+```
+
+
+### How to delete a running VM
+
+```bash
+# List instances
+scw instance server list zone=all
+
+# Populate these variables
+ZONE=<get value from instance list>
+ID=<get value from instance list>
+
+# Delete instance
+scw instance server terminate with-ip=true zone=$ZONE $ID
+```
+
+### How to get all available boot images for VMs
+
+```bash
+scw marketplace image list
 ```
