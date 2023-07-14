@@ -91,9 +91,11 @@ scw instance server console ${vm_id} zone=${zone}
 
 # post-install info
 IP=$(scw instance server get zone=$zone $vm_id --output=json | jq -r '.public_ip.address')
-echo -e "${R}";sep
-echo -e "${C}\nHow to connect to VM ${Y}$vm_name${C}:\n"
+echo -en "${R}";sep;echo -en "${C}"
+scw instance server list zone=all
+echo -en "${R}";sep;echo -en "${C}"
+echo -e "\nHow to connect to VM ${Y}${vm_name}${C}:\n"
 echo -e "${G}ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@${Y}${IP}\n"
-echo -e "${C}\nHow to delete VM ${Y}$vm_name${C}:\n"
-echo -e "${G}scw instance server terminate ${Y}$vm_id${G} zone=${Y}$zone${G} with-ip=true${R}\n"
-sep; echo -e "${C}"
+echo -e "${C}\nHow to delete VM ${Y}${vm_name}${C}:\n"
+echo -e "${G}scw instance server terminate with-ip=true zone=${Y}${zone}${G} ${Y}${vm_id}${C}\n"
+echo -en "${R}";sep;echo -e "${C}"
