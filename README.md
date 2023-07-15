@@ -58,23 +58,26 @@ __NB__: [ctrl]+[q] to close the VM console attached to your terminal.
 
 ## What it does
 
-This [script](./create-scw-wireguard_pi-hole_unbound.sh) will:
+The script [create-scw-wireguard_pi-hole_unbound.sh](./create-scw-wireguard_pi-hole_unbound.sh) will:
 - check the availability for this VM type
 - create a VM
 - attach the console to the running terminal
 - run the [cloud-init script](./cloud-init/wireguard_pi-hole_unbound.sh).
 
+The script [basic_script.sh](./basic_script.sh) does the same, but without any check or information display.
+
 
 ## The cloud-init part
 
-The [cloud-init script](./cloud-init/wireguard_pi-hole_unbound.sh) will:
+The [cloud-init script](./cloud-init/wireguard_pi-hole_unbound.sh) pushed when creating the instance will:
 - upgrade the OS
 - install docker and other things (fail2ban, ...)
 - generate a random password for root
 - create a config file for Unbound
-- create an application stack composed of Unbound, Wireguard, Pi-Hole and Watchtower using docker-compose
+- create and start an application stack composed of Unbound, Wireguard, Pi-Hole and Watchtower using docker-compose
+- add several blocklists and will also whitelist several domains in Pi-Hole
 - set a service to print the login and wireguard client information on the server console
-- reboot the OS (in case the linux kernel has been updated during the OS upgrade). 
+- reboot the OS.
 
 
 ## The docker-compose stack
@@ -89,6 +92,7 @@ The docker-compose stack relies on:
 
 Thanks to them for building these docker images, and of course to people involved in these projects.
 
+---
 
 ## Scaleway CLI commands examples
 
