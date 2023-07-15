@@ -1,6 +1,14 @@
 #!/usr/bin/env bash
+#
+# Object: create a cheap VPS VM as VPN Wireguard server, with Unbound and Pi-Hole.
+# 
+# Example:
+#         vm_name=test zone=fr-par-2 type=AMP2-C1 ./create-scw-wireguard_pi-hole_unbound.sh
+#
+#
 
-SUBJECT=$(cat <<'EOF'
+SCHEMA=$(cat <<'EOF'
+
                  .-~~~-.              ┌───────────────────────────────────┐
          .- ~ ~-(       )_ _          │VPS                                │
         / Internet           ~ -.     │ ┌────────────┐   DNS              │
@@ -23,13 +31,15 @@ SUBJECT=$(cat <<'EOF'
 EOF
 )
 
+
 vm_name=${vm_name-wireguard-vps}   # Default: wireguard-vps
 zone=${zone-nl-ams-1}              # Default: nl-ams-1
 type=${type-DEV1-S}                # Default: DEV1-S, as STARDUST1-S mainly unavailable
 image=debian_bookworm              # OS
 script="./cloud-init/wireguard_pi-hole_unbound.sh" # cloud-init script
 
-# Prerequisites
+
+# Check prerequisites
 for bin in scw jq perl tput; do
   if ! type -P $bin &>/dev/null; then
     echo "Prerequisite '$bin' not found. Abort."
@@ -47,7 +57,7 @@ sep(){ perl -le 'print "─" x $ARGV[0]' "$(tput cols)"; }
 for param in $@; do
   if grep -qE '\-h|\-\-help' <<<"$param"; then
     echo -e "\n${R}Object${C}: ${G}create a cheap VPS VM as VPN Wireguard server, with Unbound and Pi-Hole.${C}"
-    echo -e "\n$SUBJECT\n"
+    echo -e "$SCHEMA\n"
     echo -e "${Y}Usage example${C}:\n\n${G}vm_name=test zone=fr-par-2 type=AMP2-C1 $0${C}\n"
     exit 0
   fi
@@ -73,15 +83,14 @@ sep;
 echo -e "The console will be attached to this terminal.\n${R}[CTRL]${C}+${R}[Q]${C} to close it ${G}once finished${C}.\n"
 
 
-# tput magic to print screen footer while waiting for the console
-content=(); IFS=$'\n'$'\r'; while read -r line; do content+=("$line"); done <<<"$SUBJECT"; IFS=
+# tput "magic" to print screen footer while waiting for the console
+content=(); IFS=$'\n'$'\r'; while read -r line; do content+=("$line"); done <<<"$SCHEMA"; IFS=
 vLen=${#content[@]}; hLen=0; for i in "${content[@]}"; do [ ${#i} -gt $hLen ] && hLen=${#i}; done
 totalvLen=$(tput lines); totalhLen=$(tput cols); lp=$(((totalhLen - hLen) / 2))
 tput sc
-tput cup $(( totalvLen - vLen - 2)) 0
+tput cup $(( totalvLen - vLen -1 )) 0
 for i in "${content[@]}"; do seq 1 $lp | xargs printf " %.0s"; echo -e "${G}$i${C}"; done
 tput rc
-
 
 # Create VM
 vm_id=$( scw instance server create --output=json         \
