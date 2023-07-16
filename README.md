@@ -55,7 +55,7 @@ Note the parameters `vm_name`, `zone` and `type` in the command-line.
 Default values will be `wireguard-vps`, `nl-ams-1` and `DEV1-S` otherwise.
 
 
-__NB__: [ctrl]+[q] to close the VM console attached to your terminal.
+__NB__: `[ctrl]+[q]` to close the VM console attached to your terminal.
 
 
 ## What it does
@@ -66,7 +66,7 @@ The script [create-scw-wireguard_pi-hole_unbound.sh](./create-scw-wireguard_pi-h
 - attach the console to the running terminal
 - run the [cloud-init script](./cloud-init/wireguard_pi-hole_unbound.sh).
 
-The script [basic_script.sh](./basic_script.sh) does the same, but without any check or information display.
+The script [basic_script.sh](./basic_script.sh) does exactly the same, but without any check or information display.
 
 
 ## The cloud-init part
