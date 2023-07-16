@@ -38,7 +38,9 @@ Cheaper instances:
 ### Prerequisites
 - a [Scaleway account](https://console.scaleway.com/register)
 - [scaleway-cli](https://github.com/scaleway/scaleway-cli), using your account (`scw init` done)
-
+- [jq](https://github.com/jqlang/jq)
+- [perl](https://www.perl.org/get.html)
+- [tput](https://manned.org/tput.1)
 
 ### Example
 
