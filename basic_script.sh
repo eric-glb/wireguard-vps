@@ -14,13 +14,13 @@ for bin in scw jq; do
 done
 
 # create instance
-vm_id=$( scw instance server create --output=json               \
-                   type=${type} zone=${zone} image=${image}     \
-                   name=${vm_name} cloud-init=@${script} ip=new \
+vm_id=$( scw instance server create --output=json ip=new    \
+                   type=${type} zone=${zone} image=${image} \
+                   name=${vm_name} cloud-init=@${script}    \
          | jq -r '.id' )
 
 # Success?
-[ -z "$vm_id" ] && exit 1
+[ -n "$vm_id" ] || exit 1
 
 # attach console
 scw instance server console ${vm_id} zone=${zone}

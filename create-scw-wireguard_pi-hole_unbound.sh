@@ -69,11 +69,14 @@ fi
 #-> Help <----------------------------------------------------------------------
 
 for param in $@; do
-  if grep -qE '\-h|\-\-help' <<<"$param"; then
+  if grep -qE '^(\-h|\-\-help)$' <<<"$param"; then
     echo -e "\n${R}Object${C}: ${G}create a cheap VPS VM as VPN Wireguard server, with Unbound and Pi-Hole.${C}"
     echo -e "$SCHEMA\n"
     echo -e "${Y}Usage example${C}:\n\n${G}vm_name=test zone=fr-par-2 type=AMP2-C1 $0${C}\n"
     exit 0
+  else 
+    echo -e "\n${R}Error${C}: incorrect parameter ${Y}${param}${C}. Abort.\n"
+    exit 1
   fi
 done 
 
@@ -82,7 +85,7 @@ done
 TYPE_LIST=$(scw instance server-type list --output=json zone=$zone)
 AVAIL=$(jq -r --arg TYPE "$type" '.[] | select(.name == $TYPE) | .availability' <<<$TYPE_LIST)
 if [ "$AVAIL" != "available" ]; then
-  echo -e "\n${R}ERROR${C}: VM type ${Y}${type}${C} is not available in zone ${Y}${zone}${C}.\n" && exit 1
+  echo -e "\n${R}Error${C}: VM type ${Y}${type}${C} is not available in zone ${Y}${zone}${C}.\n" && exit 1
 fi
 
 #-> Info <----------------------------------------------------------------------
@@ -102,22 +105,21 @@ content=(); IFS=$'\n'$'\r'; while read -r line; do content+=("$line"); done <<<"
 vLen=${#content[@]}; hLen=0; for i in "${content[@]}"; do [ ${#i} -gt $hLen ] && hLen=${#i}; done
 totalvLen=$(tput lines); totalhLen=$(tput cols); lp=$(((totalhLen - hLen) / 2))
 tput sc
-tput cup $(( totalvLen - vLen -1 )) 0
+tput cup $(( totalvLen - vLen - 4 )) 0
 for i in "${content[@]}"; do seq 1 $lp | xargs printf " %.0s"; echo -e "${G}$i${C}"; done
 tput rc
 
 #-> Create VM <-----------------------------------------------------------------
-
-vm_id=$( scw instance server create --output=json         \
-             type=${type} zone=${zone} image=${image}     \
-             name=${vm_name} cloud-init=@${script} ip=new \
+vm_id=$( scw instance server create --output=json ip=new       \
+             type=${type} zone=${zone} image=${image}          \
+             name=${vm_name} cloud-init=@${script} 2>/dev/null \
          | jq -r '.id'
 )
 
 if [ -n "$vm_id" ]; then
-  echo -e "instance ${Y}${vm_name}${C} (${Y}${vm_id}${C}) created successfully${C}" 
+  echo -e "instance ${Y}${vm_name}${C} (${Y}${vm_id}${C}) created successfully${C}\n"
 else
-  echo -e "\n${R}ERROR${C}: instance ${Y}${vm_name}${C} has not been created successfully\n" 
+  echo -e "\n${R}Error${C}: instance ${Y}${vm_name}${C} has not been created successfully\n"
   exit 1
 fi
 
