@@ -19,6 +19,9 @@ vm_id=$( scw instance server create --output=json               \
                    name=${vm_name} cloud-init=@${script} ip=new \
          | jq -r '.id' )
 
+# Success?
+[ -z "$vm_id" ] && exit 1
+
 # attach console
 scw instance server console ${vm_id} zone=${zone}
 
