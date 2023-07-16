@@ -44,7 +44,7 @@ script="./cloud-init/wireguard_pi-hole_unbound.sh" # cloud-init script
 
 for bin in scw jq perl tput; do
   if ! type -P $bin &>/dev/null; then
-    echo "Prerequisite '$bin' not found. Abort."
+    echo -e "\nPrerequisite '$bin' not found. Abort.\n"
     exit 1
   fi
 done
@@ -54,6 +54,17 @@ done
 R="\e[0;31m"; Y="\e[0;33m"; G="\e[0;32m"; C="\e[0;m"
 sep(){ perl -le 'print "─" x $ARGV[0]' "$(tput cols)"; }
 
+#-> Prerequisite: `scw init` done <---------------------------------------------
+
+projId=$(scw info --output=json |
+          jq -r '.settings[] 
+                   | select ( .key == "default_project_id" ) 
+                   | .value'
+)
+if [ -z "$projId" ]; then
+  echo -e "\n${R}Error${C}: please run '${G}scw init${C}' before anything else. Abort.\n"
+  exit 1
+fi
 
 #-> Help <----------------------------------------------------------------------
 
