@@ -114,6 +114,13 @@ vm_id=$( scw instance server create --output=json         \
          | jq -r '.id'
 )
 
+if [ -n "$vm_id" ]; then
+  echo -e "instance ${Y}${vm_name}${C} (${Y}${vm_id}${C}) created successfully${C}" 
+else
+  echo -e "\n${R}ERROR${C}: instance ${Y}${vm_name}${C} has not been created successfully\n" 
+  exit 1
+fi
+
 #-> Attach console <------------------------------------------------------------
 
 scw instance server console ${vm_id} zone=${zone}
