@@ -25,7 +25,7 @@ MY_USER=user
 export DEBIAN_FRONTEND=noninteractive
 apt-get update
 apt-get upgrade -y
-apt-get install -y --no-install-recommends python3 pwgen qrencode fail2ban dnsutils jq wireguard docker.io docker-compose sqlite3
+apt-get install -y --no-install-recommends python3 pwgen qrencode fail2ban dnsutils jq wireguard docker.io docker-compose
 
 # Root random password, needed for console access
 ROOT_PWD=$(pwgen 24 -1)
