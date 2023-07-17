@@ -25,7 +25,7 @@ MY_USER=user
 export DEBIAN_FRONTEND=noninteractive
 apt-get update
 apt-get upgrade -y
-apt-get install -y --no-install-recommends python3 pwgen qrencode fail2ban dnsutils jq wireguard docker.io docker-compose
+apt-get install -y --no-install-recommends python3 pwgen qrencode fail2ban dnsutils jq wireguard docker.io docker-compose sqlite3
 
 # Root random password, needed for console access
 ROOT_PWD=$(pwgen 24 -1)
@@ -158,7 +158,7 @@ services:
       - 10.2.0.200 # Points to unbound
     environment:
       TZ: "Europe/Paris"
-      WEBPASSWORD: "" # Blank password
+      WEBPASSWORD: ""      # Blank password
       ServerIP: 10.1.0.100 # Internal IP of pihole
       DNS1: 10.2.0.200     # Unbound IP
       DNS2: 10.2.0.200     # If we don't specify two, it will auto pick google.
@@ -232,6 +232,14 @@ do
   [ -e ${CONF} ] && break
   sleep 2
 done
+
+# Add some blocklists and entries in the whiltelist in Pi-Hole
+docker exec pihole sqlite3 /etc/pihole/gravity.db "INSERT INTO adlist (address, enabled, comment) VALUES ('https://www.github.developerdan.com/hosts/lists/ads-and-tracking-extended.txt', 1, 'Developer Dan - Ads & Tracking');"
+docker exec pihole sqlite3 /etc/pihole/gravity.db "INSERT INTO adlist (address, enabled, comment) VALUES ('https://www.github.developerdan.com/hosts/lists/dating-services-extended.txt', 1, 'Developer Dan - Dating Services');"
+for domain in spclient.wg.spotify.com fonts.gstatic.com; do
+  docker exec pihole pihole -w $domain
+done
+
 
 # Store credentials information in /root/banner file
 SEPARATOR=$(perl -le 'print "─" x 80')
