@@ -38,7 +38,9 @@ Cheaper instances:
 ### Prerequisites
 - a [Scaleway account](https://console.scaleway.com/register)
 - [scaleway-cli](https://github.com/scaleway/scaleway-cli), using your account (`scw init` done)
-
+- [jq](https://github.com/jqlang/jq)
+- [perl](https://www.perl.org/get.html)
+- [tput](https://manned.org/tput.1)
 
 ### Example
 
@@ -53,7 +55,7 @@ Note the parameters `vm_name`, `zone` and `type` in the command-line.
 Default values will be `wireguard-vps`, `nl-ams-1` and `DEV1-S` otherwise.
 
 
-__NB__: [ctrl]+[q] to close the VM console attached to your terminal.
+__NB__: `[ctrl]+[q]` to close the VM console attached to your terminal.
 
 
 ## What it does
@@ -64,7 +66,7 @@ The script [create-scw-wireguard_pi-hole_unbound.sh](./create-scw-wireguard_pi-h
 - attach the console to the running terminal
 - run the [cloud-init script](./cloud-init/wireguard_pi-hole_unbound.sh).
 
-The script [basic_script.sh](./basic_script.sh) does the same, but without any check or information display.
+The script [basic_script.sh](./basic_script.sh) does exactly the same, but without any check or information display.
 
 
 ## The cloud-init part
@@ -99,7 +101,7 @@ Thanks to them for building these docker images, and of course to people involve
 ### How to list available VM types and hourly prices by zone
 
 ```bash
-for zone in fr-par-1 fr-par-2 fr-par-3 nl-ams-1 pl-waw-1; do
+for zone in fr-par-1 fr-par-2 fr-par-3 nl-ams-1 nl-ams-2 pl-waw-1 pl-waw-2; do
   echo -e "\n== $zone ==\n"
   scw instance server-type list --output=human zone=$zone
 done
