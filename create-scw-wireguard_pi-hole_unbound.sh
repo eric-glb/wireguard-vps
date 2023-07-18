@@ -52,7 +52,7 @@ done
 #-> Colors, etc. <--------------------------------------------------------------
 
 R="\e[0;31m"; Y="\e[0;33m"; G="\e[0;32m"; C="\e[0;m"
-sep(){ perl -le 'print "─" x $ARGV[0]' "$(tput cols)"; }
+sep(){ perl -le 'print "─" x $ARGV[0]' "${1-$(tput cols)}"; }
 
 #-> Prerequisite: `scw init` done <---------------------------------------------
 
@@ -96,7 +96,7 @@ echo -e "  - name:   ${Y}${vm_name}${C}"
 echo -e "  - type:   ${Y}${type}${C}"
 echo -e "  - zone:   ${Y}${zone}${C}"
 echo -e "  - script: ${Y}${script}${C}\n"
-sep;
+sep
 echo -e "The console will be attached to this terminal.\n${R}[CTRL]${C}+${R}[Q]${C} to close it ${G}once finished${C}.\n"
 
 #-> tput "magic" to print screen footer while waiting for the console <---------
@@ -107,6 +107,8 @@ totalvLen=$(tput lines); totalhLen=$(tput cols); lp=$(((totalhLen - hLen) / 2))
 tput sc
 tput cup $(( totalvLen - vLen - 4 )) 0
 for i in "${content[@]}"; do seq 1 $lp | xargs printf " %.0s"; echo -e "${G}$i${C}"; done
+tput cup 0 $((totalhLen - (totalhLen * 10 / 100) ))
+gunzip <./assets/tentacle.gz 
 tput rc
 
 #-> Create VM <-----------------------------------------------------------------
