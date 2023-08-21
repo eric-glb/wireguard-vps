@@ -1,0 +1,40 @@
+---
+# tasks file for os-install
+- name: randomize root password
+  shell: |
+    ROOT_PWD=$(pwgen 24 -1)
+    echo "root:${ROOT_PWD}" | chpasswd
+    echo "${ROOT_PWD}" | tee /root/.passwd
+  register: root_password
+- name: apt update
+  apt:
+    name: "*"
+    state: latest
+    update_cache: yes
+    cache_valid_time: 3600
+  notify: 
+    - Reboot server
+  
+- name: Install prerequisites
+  apt:
+    pkg:
+      - python3 
+      - pwgen
+      - qrencode
+      - fail2ban
+      - dnsutils 
+      - jq
+      - wireguard 
+      - docker.io
+      - docker-compose
+- name: Ensure docker.service is started
+  systemd:
+    state: started
+    enabled: yes
+    name: docker.service
+- name: Print root password
+  debug:
+    msg:  "password for root: {{ root_password.stdout }}"
+- name: Store root password for other role(s)
+  set_fact:
+    root_password: "{{ root_password.stdout }}"

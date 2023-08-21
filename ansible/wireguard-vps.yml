@@ -1,0 +1,9 @@
+---
+- name: wireguard-vps VM configuration
+  hosts: target
+  remote_user: root
+  
+  roles:
+  - role: os-install
+
+    #- role: docker-appli-stack

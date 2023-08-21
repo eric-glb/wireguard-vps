@@ -1,0 +1,4 @@
+---
+# handlers file for os-install/
+- name: Reboot server
+  shell: reboot
