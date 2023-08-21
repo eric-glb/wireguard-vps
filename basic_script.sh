@@ -1,10 +1,11 @@
 #!/usr/bin/env bash
 
+SCRIPTPATH=$( dirname $(realpath "$0") )
 vm_name=${vm_name-wireguard-vps}
 zone=${zone-nl-ams-1}
 type=${type-DEV1-S}
 image=debian_bookworm
-script="./cloud-init/wireguard_pi-hole_unbound.sh"
+script="${SCRIPTPATH}/cloud-init/wireguard_pi-hole_unbound.sh"
 
 # prerequisites
 for bin in scw jq; do

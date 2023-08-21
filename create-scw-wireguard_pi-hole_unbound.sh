@@ -34,11 +34,12 @@ EOF
 
 #-> Variables <-----------------------------------------------------------------
 
+SCRIPTPATH=$( dirname $(realpath "$0") )
 vm_name=${vm_name-wireguard-vps}   # Default: wireguard-vps
 zone=${zone-nl-ams-1}              # Default: nl-ams-1
 type=${type-DEV1-S}                # Default: DEV1-S, as STARDUST1-S mainly unavailable
 image=debian_bookworm              # OS
-script="./cloud-init/wireguard_pi-hole_unbound.sh" # cloud-init script
+script="${SCRIPTPATH}/cloud-init/wireguard_pi-hole_unbound.sh" # cloud-init script
 
 #-> Check prerequisites <-------------------------------------------------------
 
