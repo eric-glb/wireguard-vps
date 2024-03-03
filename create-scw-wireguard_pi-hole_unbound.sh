@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 #
 # Object: create a cheap VPS VM as VPN Wireguard server, with Unbound and Pi-Hole.
-# 
+#
 # Example:
 #         vm_name=test zone=fr-par-2 type=AMP2-C1 ./create-scw-wireguard_pi-hole_unbound.sh
 #
@@ -58,8 +58,8 @@ sep(){ perl -le 'print "─" x $ARGV[0]' "${1-$(tput cols)}"; }
 #-> Prerequisite: `scw init` done <---------------------------------------------
 
 projId=$(scw info --output=json |
-          jq -r '.settings[] 
-                   | select ( .key == "default_project_id" ) 
+          jq -r '.settings[]
+                   | select ( .key == "default_project_id" )
                    | .value'
 )
 if [ -z "$projId" ]; then
@@ -75,11 +75,11 @@ for param in $@; do
     echo -e "$SCHEMA\n"
     echo -e "${Y}Usage example${C}:\n\n${G}vm_name=test zone=fr-par-2 type=AMP2-C1 $0${C}\n"
     exit 0
-  else 
+  else
     echo -e "\n${R}Error${C}: incorrect parameter ${Y}${param}${C}. Abort.\n"
     exit 1
   fi
-done 
+done
 
 #-> Check VM availability <-----------------------------------------------------
 
@@ -108,8 +108,6 @@ totalvLen=$(tput lines); totalhLen=$(tput cols); lp=$(((totalhLen - hLen) / 2))
 tput sc
 tput cup $(( totalvLen - vLen - 4 )) 0
 for i in "${content[@]}"; do seq 1 $lp | xargs printf " %.0s"; echo -e "${G}$i${C}"; done
-tput cup 0 $((totalhLen - (totalhLen * 10 / 100) ))
-gunzip <./assets/tentacle.gz 
 tput rc
 
 #-> Create VM <-----------------------------------------------------------------
