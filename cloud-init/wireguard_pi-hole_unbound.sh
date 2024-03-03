@@ -5,19 +5,18 @@
 
 cat <<'EOF' > /dev/console
 
-    ██╗    ██╗██╗██████╗ ███████╗ ██████╗ ██╗   ██╗ █████╗ ██████╗ ██████╗
-    ██║    ██║██║██╔══██╗██╔════╝██╔════╝ ██║   ██║██╔══██╗██╔══██╗██╔══██╗
-    ██║ █╗ ██║██║██████╔╝█████╗  ██║  ███╗██║   ██║███████║██████╔╝██║  ██║
-    ██║███╗██║██║██╔══██╗██╔══╝  ██║   ██║██║   ██║██╔══██║██╔══██╗██║  ██║
-    ╚███╔███╔╝██║██║  ██║███████╗╚██████╔╝╚██████╔╝██║  ██║██║  ██║██████╔╝
-     ╚══╝╚══╝ ╚═╝╚═╝  ╚═╝╚══════╝ ╚═════╝  ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝╚═════╝
-
-                           ██╗   ██╗██████╗ ███████╗
-                           ██║   ██║██╔══██╗██╔════╝
-                           ██║   ██║██████╔╝███████╗
-                           ╚██╗ ██╔╝██╔═══╝ ╚════██║
-                            ╚████╔╝ ██║     ███████║
-                             ╚═══╝  ╚═╝     ╚══════╝
+██╗    ██╗██╗██████╗ ███████╗ ██████╗ ██╗   ██╗ █████╗ ██████╗ ██████╗
+██║    ██║██║██╔══██╗██╔════╝██╔════╝ ██║   ██║██╔══██╗██╔══██╗██╔══██╗
+██║ █╗ ██║██║██████╔╝█████╗  ██║  ███╗██║   ██║███████║██████╔╝██║  ██║
+██║███╗██║██║██╔══██╗██╔══╝  ██║   ██║██║   ██║██╔══██║██╔══██╗██║  ██║
+╚███╔███╔╝██║██║  ██║███████╗╚██████╔╝╚██████╔╝██║  ██║██║  ██║██████╔╝
+ ╚══╝╚══╝ ╚═╝╚═╝  ╚═╝╚══════╝ ╚═════╝  ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝╚═════╝
+                       ██╗   ██╗██████╗ ███████╗
+                       ██║   ██║██╔══██╗██╔════╝
+                       ██║   ██║██████╔╝███████╗
+                       ╚██╗ ██╔╝██╔═══╝ ╚════██║
+                        ╚████╔╝ ██║     ███████║
+                         ╚═══╝  ╚═╝     ╚══════╝
 
 EOF
 
@@ -25,7 +24,27 @@ MY_USER=user
 export DEBIAN_FRONTEND=noninteractive
 apt-get update
 apt-get upgrade -y
-apt-get install -y --no-install-recommends python3 pwgen qrencode fail2ban dnsutils jq wireguard docker.io docker-compose
+apt-get install -y --no-install-recommends \
+                python3 pwgen qrencode fail2ban \
+                dnsutils jq wireguard docker.io \
+                docker-compose git rsyslog
+
+cat <<'EOF' > /dev/console
+
+    ███████╗██╗   ██╗███████╗████████╗███████╗███╗   ███╗
+    ██╔════╝╚██╗ ██╔╝██╔════╝╚══██╔══╝██╔════╝████╗ ████║
+    ███████╗ ╚████╔╝ ███████╗   ██║   █████╗  ██╔████╔██║
+    ╚════██║  ╚██╔╝  ╚════██║   ██║   ██╔══╝  ██║╚██╔╝██║
+    ███████║   ██║   ███████║   ██║   ███████╗██║ ╚═╝ ██║
+    ╚══════╝   ╚═╝   ╚══════╝   ╚═╝   ╚══════╝╚═╝     ╚═╝
+        ██████╗ ██████╗ ███╗   ██╗███████╗██╗ ██████╗
+       ██╔════╝██╔═══██╗████╗  ██║██╔════╝██║██╔════╝
+       ██║     ██║   ██║██╔██╗ ██║█████╗  ██║██║  ███╗
+       ██║     ██║   ██║██║╚██╗██║██╔══╝  ██║██║   ██║
+       ╚██████╗╚██████╔╝██║ ╚████║██║     ██║╚██████╔╝
+        ╚═════╝ ╚═════╝ ╚═╝  ╚═══╝╚═╝     ╚═╝ ╚═════╝
+
+EOF
 
 # Root random password, needed for console access
 ROOT_PWD=$(pwgen 24 -1)
@@ -91,6 +110,25 @@ server:
         control-enable: no
 EOF
 touch /docker/unbound/unbound.log
+
+# endlessh: https://github.com/skeeto/endlessh - the image will be build using docker-compose
+mkdir -p /docker/endlessh
+git clone https://github.com/skeeto/endlessh.git /docker/endlessh
+
+# https://github.com/itskenny0/fail2ban-endlessh
+mkdir /tmp/fail2ban-endlessh
+git clone https://github.com/itskenny0/fail2ban-endlessh.git /tmp/fail2ban-endlessh
+cp /tmp/fail2ban-endlessh/action.d/endlessh.conf /etc/fail2ban/action.d/endlessh.conf
+cp /tmp/fail2ban-endlessh/jail.d/endlessh.conf /etc/fail2ban/jail.d/endlessh.conf
+rm -rf /tmp/fail2ban-endlessh
+
+# Harden fail2ban
+sed -i 's/<iptables>/iptables/g' /etc/fail2ban/action.d/endlessh.conf #FIXME?
+cat <<EOF >> /etc/fail2ban/jail.d/endlessh.conf
+bantime  = 24h
+findtime = 12h
+maxretry = 3
+EOF
 
 # docker-compose file, Cf. https://github.com/IAmStoxe/wirehole
 
@@ -183,9 +221,36 @@ services:
     environment:
       WATCHTOWER_POLL_INTERVAL: 86400
       WATCHTOWER_CLEANUP: "true"
+
+  endlessh:
+    image: endlessh:latest
+    build: ./endlessh
+    container_name: endlessh
+    hostname: endlessh
+    restart: unless-stopped
+    ports:
+      - 2222:2222
 EOF
 
 cd /docker || return
+
+cat <<'EOF' > /dev/console
+
+            ██████╗ ██╗   ██╗██╗██╗     ██████╗
+            ██╔══██╗██║   ██║██║██║     ██╔══██╗
+            ██████╔╝██║   ██║██║██║     ██║  ██║
+            ██╔══██╗██║   ██║██║██║     ██║  ██║
+            ██████╔╝╚██████╔╝██║███████╗██████╔╝
+            ╚═════╝  ╚═════╝ ╚═╝╚══════╝╚═════╝
+      ██╗███╗   ███╗ █████╗  ██████╗ ███████╗███████╗
+      ██║████╗ ████║██╔══██╗██╔════╝ ██╔════╝██╔════╝
+      ██║██╔████╔██║███████║██║  ███╗█████╗  ███████╗
+      ██║██║╚██╔╝██║██╔══██║██║   ██║██╔══╝  ╚════██║
+      ██║██║ ╚═╝ ██║██║  ██║╚██████╔╝███████╗███████║
+      ╚═╝╚═╝     ╚═╝╚═╝  ╚═╝ ╚═════╝ ╚══════╝╚══════╝
+
+EOF
+docker-compose build endlessh 2>/dev/null
 
 cat <<'EOF' > /dev/console
 
@@ -206,7 +271,7 @@ cat <<'EOF' > /dev/console
 EOF
 docker-compose pull
 
-cat <<'EOF' > /dev/console 
+cat <<'EOF' > /dev/console
 
          ███████╗████████╗ █████╗ ██████╗ ████████╗
          ██╔════╝╚══██╔══╝██╔══██╗██╔══██╗╚══██╔══╝
@@ -240,7 +305,6 @@ for domain in spclient.wg.spotify.com fonts.gstatic.com; do
   docker exec pihole pihole -w $domain
 done
 
-
 # Store credentials information in /root/banner file
 SEPARATOR=$(perl -le 'print "─" x 80')
 (
@@ -250,7 +314,7 @@ SEPARATOR=$(perl -le 'print "─" x 80')
   cat ${CONF}
   echo -e "${SEPARATOR}\nRoot password for console access: ${ROOT_PWD}\n${SEPARATOR}"
   echo -e "Connect to this server:\n  ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@$(curl -sL https://ifconfig.co/)\n${SEPARATOR}"
-) > /root/banner 
+) > /root/banner
 
 # Systemd service to print credentials on the console at boot time
 cat <<'EOF' > /lib/systemd/system/banner-console.service
@@ -268,7 +332,7 @@ EOF
 systemctl daemon-reload
 systemctl enable banner-console
 
-#restart VM 
+#restart VM
 cat <<'EOF' > /dev/console
 
     ██████╗ ███████╗██████╗  ██████╗  ██████╗ ████████╗
