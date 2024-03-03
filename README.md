@@ -8,10 +8,11 @@ All these applications are dockerized, and the docker images are regularly pulle
 [Scaleway](https://www.scaleway.com/) is a french cloud provider with affordable costs.
 
 Cheaper instances:
+
 - [STARDUST1-S](https://www.scaleway.com/en/stardust-instances/) (only available at fr-par-1 and nl-ams-1)
 - [AMP2-C1](https://www.scaleway.com/en/amp2-instances/) (only available at fr-par-2; arm64)
 
-```
+```text
                  .-~~~-.              ┌───────────────────────────────────┐
          .- ~ ~-(       )_ _          │VPS                                │
         / Internet           ~ -.     │ ┌────────────┐   DNS              │
@@ -36,6 +37,7 @@ Cheaper instances:
 ## How to create a wireguard + Unbound + PI-hole VM
 
 ### Prerequisites
+
 - a [Scaleway account](https://console.scaleway.com/register)
 - [scaleway-cli](https://github.com/scaleway/scaleway-cli), using your account (`scw init` done)
 - [jq](https://github.com/jqlang/jq)
@@ -54,13 +56,12 @@ vm_name=test zone=fr-par-2 type=AMP2-C1 ./create-scw-wireguard_pi-hole_unbound.s
 Note the parameters `vm_name`, `zone` and `type` in the command-line.
 Default values will be `wireguard-vps`, `nl-ams-1` and `DEV1-S` otherwise.
 
-
 __NB__: `[ctrl]+[q]` to close the VM console attached to your terminal.
-
 
 ## What it does
 
 The script [create-scw-wireguard_pi-hole_unbound.sh](./create-scw-wireguard_pi-hole_unbound.sh) will:
+
 - check the availability for this VM type
 - create a VM
 - attach the console to the running terminal
@@ -68,31 +69,36 @@ The script [create-scw-wireguard_pi-hole_unbound.sh](./create-scw-wireguard_pi-h
 
 The script [basic_script.sh](./basic_script.sh) does exactly the same, but without any check or information display.
 
-
 ## The cloud-init part
 
 The [cloud-init script](./cloud-init/wireguard_pi-hole_unbound.sh) pushed when creating the instance will:
+
 - upgrade the OS
 - install docker and other things (fail2ban, ...)
 - generate a random password for root
 - create a config file for Unbound
+- configure and harden fail2ban using [fail2ban-endlessh](https://github.com/itskenny0/fail2ban-endlessh) configuration
+- clone [endlessh](https://github.com/skeeto/endlessh) in order to build the container image (cf. [docker-compose.yml](./docker-compose.yml) and `endlessh`'s Dockerfile)
 - create and start an application stack composed of Unbound, Wireguard, Pi-Hole and Watchtower using docker-compose
 - add several blocklists and will also whitelist several domains in Pi-Hole
 - set a service to print the login and wireguard client information on the server console
 - reboot the OS.
 
-
 ## The docker-compose stack
 
 Very largely inspired/copied from [IAmStoxe/wirehole](https://github.com/IAmStoxe/wirehole), but modified and a bit simplified according to my needs.
 
-The docker-compose stack relies on:
+The [docker-compose stack](./docker-compose.yml) relies on:
+
 - [alpinelinux/unbound](https://hub.docker.com/r/alpinelinux/unbound) (was previously [mvance/unbound](https://github.com/MatthewVance/unbound-docker), but the latter was x86_64-only)
 - [linuxserver/docker-wireguard](https://github.com/linuxserver/docker-wireguard)
 - [pihole/pihole](https://github.com/pi-hole/pi-hole)
 - [containrrr/watchtower](https://github.com/containrrr/watchtower)
+- a built on-the-fly [endlessh](https://github.com/skeeto/endlessh) container to harden a bit fail2ban
 
 Thanks to them for building these docker images, and of course to people involved in these projects.
+
+
 
 ---
 
@@ -106,7 +112,6 @@ for zone in fr-par-1 fr-par-2 fr-par-3 nl-ams-1 nl-ams-2 pl-waw-1 pl-waw-2; do
   scw instance server-type list --output=human zone=$zone
 done
 ```
-
 
 ### How to connect to the VM
 
@@ -127,7 +132,6 @@ scw instance server reboot zone=$ZONE $ID
 # Attach to the instance console ([CTRL]+[Q] to detach from console)
 scw instance server console zone=$ZONE $ID
 ```
-
 
 ### How to delete a running VM
 
@@ -155,7 +159,7 @@ Objective: route only Internet traffic to the VPN, but keep local network and DN
 
 Use [WireGuard AllowedIPs Calculator](https://www.procustodibus.com/blog/2021/03/wireguard-allowedips-calculator/) to calculate the `AllowedIPs`parameter.
 
-_Example_: 
+_Example_:
 
 ```text
 [Interface]
