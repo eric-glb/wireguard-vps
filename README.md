@@ -2,6 +2,8 @@
 
 ![screenshot](./assets/scw-wireguard.png)
 
+## Goal
+
 Script to instanciate in ~3min a [Scaleway](https://www.scaleway.com/) VM as [Wireguard VPN](https://www.wireguard.com/) with [Unbound](https://nlnetlabs.nl/projects/unbound/about/) and [Pi-hole](https://github.com/pi-hole), using [cloud-init](https://cloudinit.readthedocs.io/en/latest/) facilities.
 All these applications are dockerized, and the docker images are regularly pulled/updated by [watchtower](https://github.com/containrrr/watchtower).
 
@@ -175,3 +177,8 @@ Endpoint = [REDACTED]:[REDACTED]
 ```
 
 This `AllowedIPs` excludes all local networks according to [RFC1918](https://en.wikipedia.org/w/index.php?title=RFC1918).
+
+## Demo
+
+![demo](./assets/demo.gif)
+(speed is x3)
